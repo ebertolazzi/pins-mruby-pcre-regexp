@@ -259,7 +259,7 @@ pcre_regexp_quote_class(mrb_state *mrb, mrb_value self) {
 }
 
 void
-mrb_mruby_pcre_regexp_gem_init(mrb_state* mrb) {
+mrb_pins_mruby_pcre_regexp_gem_init(mrb_state* mrb) {
   struct RClass *clazz;
 
   clazz = mrb_define_class(mrb, "PcreRegexp", mrb->object_class);
@@ -278,7 +278,7 @@ mrb_mruby_pcre_regexp_gem_init(mrb_state* mrb) {
 }
 
 void
-mrb_mruby_pcre_regexp_gem_final(mrb_state* mrb) {
+mrb_pins_mruby_pcre_regexp_gem_final(mrb_state* mrb) {
 }
 
 // vim:set et:
