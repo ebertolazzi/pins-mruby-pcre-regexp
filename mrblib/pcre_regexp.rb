@@ -93,6 +93,12 @@ class PcreMatchData
 end
 
 class String
+  alias_method :old_sub, :sub
+  alias_method :old_gsub, :gsub
+  alias_method :old_gsub!, :gsub!
+  alias_method :old_split, :split
+  alias_method :old_scan, :scan
+
   def =~(a)
     begin
       (a.class.to_s == 'String' ?  Regexp.new(a.to_s) : a) =~ self
@@ -100,7 +106,7 @@ class String
       false
     end
   end
-  alias_method :old_sub, :sub
+
   def sub(*args, &blk)
     if args[0].class.to_s == 'String'
       return blk ? old_sub(*args) {|x| blk.call(x)} : old_sub(*args)
@@ -117,7 +123,7 @@ class String
     r += m.post_match
     r
   end
-  alias_method :old_gsub, :gsub
+
   def gsub(*args, &blk)
     if args[0].class.to_s == 'String'
       return blk ? old_gsub(*args) {|x| blk.call(x)} : old_gsub(*args)
@@ -139,7 +145,14 @@ class String
     r += ss
     r
   end
-  alias_method :old_split, :split
+
+  def gsub!(*args, &block)
+    raise FrozenError, "can't modify frozen String" if frozen?
+    str = self.gsub(*args, &block)
+    self.replace(str)
+    return self
+  end
+
   def split(*args)
     return old_split(' ') if args[0] == nil
     return old_split(*args) if args[0].class.to_s == 'String'
@@ -165,12 +178,12 @@ class String
     r << ss
     r
   end
-  alias_method :old_scan, :scan
+
   def scan(*args, &blk)
     return old_scan(*args) if args[0].class.to_s == 'String'
     ss = self
     r = []
-	while true
+    while true
       begin
         m = args[0].match(ss)
       rescue
@@ -191,6 +204,7 @@ class String
   end
 end
 
-Regexp = PcreRegexp unless Object.const_defined?(:Regexp)
+Regexp    = PcreRegexp    unless Object.const_defined?(:Regexp)
+MatchData = PcreMatchData unless Object.const_defined?(:MatchData)
 
 # This is based on https://github.com/masamitsu-murase/mruby-hs-regexp

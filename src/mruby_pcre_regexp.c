@@ -46,7 +46,7 @@ pcre_regexp_init(mrb_state *mrb, mrb_value self, mrb_value str, mrb_value flag) 
     mrb_iv_set(mrb, self, mrb_intern_lit(mrb, "@regexp"), mrb_obj_value(
         Data_Wrap_Struct(mrb, mrb->object_class,
           &mrb_pcre_regexp_type, (void*) reg)));
-  }else{
+  } else {
     Data_Get_Struct(mrb, regexp, &mrb_pcre_regexp_type, reg);
     pcre_free(reg->re);
   }
@@ -115,7 +115,7 @@ pcre_regexp_match(mrb_state *mrb, mrb_value self) {
   struct RClass* clazz;
   mrb_value c;
   mrb_value args[2];
-  
+
   mrb_get_args(mrb, "z", &str);
 
   regexp = mrb_iv_get(mrb, self, mrb_intern_lit(mrb, "@regexp"));
